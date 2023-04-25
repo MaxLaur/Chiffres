@@ -15,12 +15,10 @@ const TreeCalculator = () => {
   }
   // set tree format in state
   const selectFormat = (ev) => {
-    console.log(ev.target.value)
     setTreeFormat(ev.target.value)
   }
   // set land preparation style in state
   const selectPrep = (ev) => {
-    console.log(ev.target.value)
     setPrep(ev.target.value)
   }
   //multiplies the amount of cassettes with the amount of trees per cassettes
@@ -65,7 +63,7 @@ const TreeCalculator = () => {
 
     // if no format or prep selected
     else {
-      console.log('no format or prep selected')
+      // console.log('no format or prep selected')
     }
     
   }, [treeFormat, numOfCassettes, prep])
@@ -100,13 +98,14 @@ const TreeCalculator = () => {
         {/* <option value={'autres'}>Autres</option> */}
       </Select>
       <Amount>Arbres: {amountOfTrees}</Amount>
-      <Amount>Montant: ${amountOfMoney}</Amount>
+      <Amount>Montant: ${amountOfMoney.toFixed(2)}</Amount>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
   display: flex;
+  margin: 5px 0;
   color: white;
   padding: 15px;
   border-radius: 15px;

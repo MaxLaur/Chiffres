@@ -1,6 +1,6 @@
 import styled from "styled-components"
 
-const BackgroundImages = () => {
+const BackgroundImage = () => {
   return (
     <Img src="https://www.wildernesscommittee.org/sites/default/files/2018-10/Cutblock%20R315%20from%20the%20air.jpg"/>
   )
@@ -12,4 +12,4 @@ const Img = styled.img`
   z-index: -1;
 `;
 
-export default BackgroundImages
+export default BackgroundImage
