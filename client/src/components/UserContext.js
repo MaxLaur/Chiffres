@@ -7,7 +7,9 @@ export const CurrentUserProvider = ({ children }) => {
   const { loginWithPopup, logout, user, isAuthenticated } = useAuth0();
   const [currentUser, setCurrentUser] = useState(null);
   // set how many tree calculators we will need.
-  const [calculators, setCalculators] = useState(['format']);
+  // {cassettes: 0, format: null, prep: null, amountOfTrees: null, amountOfMoney: null }
+  const [calculators, setCalculators] = useState([]);
+  const [dailyTally, setDailyTally] = useState([])
 
   // send the user's info to the backend and set that user with its details in a state.
   // useEffect(() => {
@@ -37,7 +39,7 @@ export const CurrentUserProvider = ({ children }) => {
 
   return (
     <>
-        <CurrentUserContext.Provider value={{ calculators, setCalculators, currentUser, setCurrentUser, user, isAuthenticated, loginWithPopup, logout }}>
+        <CurrentUserContext.Provider value={{ calculators, setCalculators, dailyTally, setDailyTally, currentUser, setCurrentUser, user, isAuthenticated, loginWithPopup, logout }}>
           {children}
         </CurrentUserContext.Provider>
     </>

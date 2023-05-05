@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import styled from "styled-components";
+import { CurrentUserContext } from "../UserContext";
 
 const TreeCalculator = () => {
   const [treeFormat, setTreeFormat] = useState(null)
@@ -8,7 +9,10 @@ const TreeCalculator = () => {
   const [treePrice, setTreePrice] = useState(null)
   const [amountOfTrees, setAmountOfTrees] = useState(0)
   const [amountOfMoney, setAmountOfMoney] = useState(0)
-
+  // tree format daily tally
+  const [dailyTreeTally, setDailyTreeTally] = useState({numOfCassettes: 0, treeFormat: null, prep: null, amountOfTrees: null, amountOfMoney: null})
+  // total daily tally
+  const { dailyTally, setDailyTally } = useContext(CurrentUserContext)
   // set the amount of cassettes planted
   const amountOfCassettes = (ev) => {
     setNumOfCassettes(Number(ev.target.value))
@@ -34,11 +38,21 @@ const TreeCalculator = () => {
     }
   }, [treeFormat, numOfCassettes])
 
+  // set the calculators' tally
+  useEffect(() => {
+    setDailyTreeTally({numOfCassettes, treeFormat, prep, amountOfTrees, amountOfMoney})
+  }, [treeFormat, numOfCassettes, prep, treePrice, amountOfMoney])
+
+  // add tree tally to daily tally.
+  const addTrees = () => {
+    setDailyTally([ ...dailyTally, dailyTreeTally])
+  }
+
+  if (dailyTreeTally) {
+    // console.log(dailyTreeTally)
+  }
   // set the price per tree
   useEffect(() => {
-    // if no format or prep has been selected (breaks the amount of money)
-    // if(treeFormat || prep === 'none') setTreePrice(0)
-
     // 45 tree prices
     if(treeFormat === '45' && prep === 'andains') setTreePrice(0.15)
     else if(treeFormat === '45' && prep === 'sillons') setTreePrice(0.155)
@@ -99,6 +113,7 @@ const TreeCalculator = () => {
       </Select>
       <Amount>Arbres: {amountOfTrees}</Amount>
       <Amount>Montant: ${amountOfMoney.toFixed(2)}</Amount>
+      <AddTreeTallyButton onClick={addTrees}>Add trees</AddTreeTallyButton>
     </Wrapper>
   )
 }
@@ -110,6 +125,7 @@ const Wrapper = styled.div`
   padding: 15px;
   border-radius: 15px;
   background-color: gray;
+  opacity: 0.9;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
 `;
 const Label = styled.label`
@@ -123,6 +139,9 @@ const Select = styled.select`
 `;
 const Amount = styled.div`
   margin-inline: 5px;
+`;
+const AddTreeTallyButton = styled.button`
+  padding: 0px 15px;
 `;
 
 export default TreeCalculator;
