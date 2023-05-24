@@ -10,6 +10,7 @@ export const CurrentUserProvider = ({ children }) => {
   // {cassettes: 0, format: null, prep: null, amountOfTrees: null, amountOfMoney: null }
   const [calculators, setCalculators] = useState([]);
   const [dailyTally, setDailyTally] = useState([])
+  const [totalDailyMoney, setTotalDailyMoney] = useState(0);
 
   // send the user's info to the backend and set that user with its details in a state.
   // useEffect(() => {
@@ -39,7 +40,7 @@ export const CurrentUserProvider = ({ children }) => {
 
   return (
     <>
-        <CurrentUserContext.Provider value={{ calculators, setCalculators, dailyTally, setDailyTally, currentUser, setCurrentUser, user, isAuthenticated, loginWithPopup, logout }}>
+        <CurrentUserContext.Provider value={{ calculators, setCalculators, dailyTally, setDailyTally, totalDailyMoney, setTotalDailyMoney, currentUser, setCurrentUser, user, isAuthenticated, loginWithPopup, logout }}>
           {children}
         </CurrentUserContext.Provider>
     </>

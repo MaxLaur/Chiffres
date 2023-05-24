@@ -8,13 +8,18 @@ import { CurrentUserContext } from "./UserContext";
 
 const MainPage = () => {
   const [value, onChange] = useState(new Date());
-  const [totalDailyMoney, setTotalDailyMoney] = useState(0);
+  // const [totalDailyMoney, setTotalDailyMoney] = useState(0);
   const { calculators, setCalculators } = useContext(CurrentUserContext)
   const { dailyTally, setDailyTally } = useContext(CurrentUserContext)
+  const { totalDailyMoney, setTotalDailyMoney } = useContext(CurrentUserContext)
 
   const addOrRemoveNewTrees = (ev) => {
     if(ev.target.value === '+') setCalculators([ ...calculators, {cassettes: 0, format: null, prep: null, amountOfTrees: null, amountOfMoney: null } ]);
-    else if(ev.target.value === '-') setCalculators(calculators.slice(0, -1));
+    else if(ev.target.value === '-') {
+      setCalculators(calculators.slice(0, -1))
+      // console.log(dailyTally)
+      setDailyTally(dailyTally.slice(0, -1))
+    };
   }
   const submitDailyTally = () => {
     console.log({date: value, production: [dailyTally], moneyTotal: totalDailyMoney})
@@ -24,9 +29,10 @@ const MainPage = () => {
   }
   
   useEffect(() =>{
+    console.log(dailyTally)
     dailyTally.forEach((tally) => {
       setTotalDailyMoney(totalDailyMoney + tally.amountOfMoney)
-      console.log(Number(totalDailyMoney.toFixed(2)))
+      console.log(totalDailyMoney)
     })
   }, [dailyTally])
 
@@ -53,7 +59,7 @@ const MainPage = () => {
             calculators &&
             calculators.map((calculator, index) => {
               return (
-                <TreeCalculator key={`TreeCalculator ${index}`} />
+                <TreeCalculator key={`TreeCalculator ${index}`} id={`calculator${index}`}/>
               )
             })
           }

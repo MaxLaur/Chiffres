@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react"
 import styled from "styled-components";
 import { CurrentUserContext } from "../UserContext";
 
-const TreeCalculator = () => {
+const TreeCalculator = ({ id }) => {
   const [treeFormat, setTreeFormat] = useState(null)
   const [numOfCassettes, setNumOfCassettes] = useState(0)
   const [prep, setPrep] = useState(null)
@@ -13,6 +13,8 @@ const TreeCalculator = () => {
   const [dailyTreeTally, setDailyTreeTally] = useState({numOfCassettes: 0, treeFormat: null, prep: null, amountOfTrees: null, amountOfMoney: null})
   // total daily tally
   const { dailyTally, setDailyTally } = useContext(CurrentUserContext)
+  const { totalDailyMoney, setTotalDailyMoney } = useContext(CurrentUserContext)
+  const { calculators, setCalculators } = useContext(CurrentUserContext)
   // set the amount of cassettes planted
   const amountOfCassettes = (ev) => {
     setNumOfCassettes(Number(ev.target.value))
@@ -46,6 +48,21 @@ const TreeCalculator = () => {
   // add tree tally to daily tally.
   const addTrees = () => {
     setDailyTally([ ...dailyTally, dailyTreeTally])
+  }
+  // find the index of the tally we want to remove to pass it to removeEntry
+  const findTheTreeTally = (element) => element === dailyTreeTally;
+  // remove that entry from the daily tally
+  const removeEntry = () => {
+    setTotalDailyMoney(0)
+    // I don't know why but my code doesnt behave correctly unless I keep
+    // the console.log below. Maybe because it gives setTotalDailyMoney enough
+    // time to update itself? Tried async function and await setTotalDailyMoney
+    // as well as setDailyTally but still was getting a buggy result
+    console.log(dailyTally.splice(dailyTally.findIndex(findTheTreeTally), 1))
+    setDailyTally(dailyTally.splice(dailyTally.findIndex(findTheTreeTally), 1))
+    console.log(calculators)
+    console.log(calculators.findIndex(findTheTreeTally))
+    setCalculators(calculators.splice(calculators.findIndex(findTheTreeTally), 1))
   }
 
   if (dailyTreeTally) {
@@ -114,6 +131,7 @@ const TreeCalculator = () => {
       <Amount>Arbres: {amountOfTrees}</Amount>
       <Amount>Montant: ${amountOfMoney.toFixed(2)}</Amount>
       <AddTreeTallyButton onClick={addTrees}>Add trees</AddTreeTallyButton>
+      <RemoveEntryButton onClick={removeEntry}>Delete</RemoveEntryButton>
     </Wrapper>
   )
 }
@@ -141,6 +159,9 @@ const Amount = styled.div`
   margin-inline: 5px;
 `;
 const AddTreeTallyButton = styled.button`
+  padding: 0px 15px;
+`;
+const RemoveEntryButton = styled.button`
   padding: 0px 15px;
 `;
 
