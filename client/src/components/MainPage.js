@@ -8,20 +8,24 @@ import { CurrentUserContext } from "./UserContext";
 
 const MainPage = () => {
   const [value, onChange] = useState(new Date());
-  // const [totalDailyMoney, setTotalDailyMoney] = useState(0);
   const { calculators, setCalculators } = useContext(CurrentUserContext)
   const { dailyTally, setDailyTally } = useContext(CurrentUserContext)
   const { totalDailyMoney, setTotalDailyMoney } = useContext(CurrentUserContext)
 
+  const idRandomizer = () => {
+    // might get two of the same id.
+    return Math.floor(Math.random() * 1500);
+  }
+
   const addOrRemoveNewTrees = (ev) => {
-    if(ev.target.value === '+') setCalculators([ ...calculators, {cassettes: 0, format: null, prep: null, amountOfTrees: null, amountOfMoney: null } ]);
+    if(ev.target.value === '+') setCalculators([ ...calculators, {id: idRandomizer()} ]);
     else if(ev.target.value === '-') {
       setCalculators(calculators.slice(0, -1))
-      // console.log(dailyTally)
       setDailyTally(dailyTally.slice(0, -1))
     };
   }
   const submitDailyTally = () => {
+    console.log(dailyTally)
     console.log({date: value, production: [dailyTally], moneyTotal: totalDailyMoney})
   }
   const dateClicked = (ev) => {
@@ -29,12 +33,10 @@ const MainPage = () => {
   }
   
   useEffect(() =>{
-    console.log(dailyTally)
     dailyTally.forEach((tally) => {
       setTotalDailyMoney(totalDailyMoney + tally.amountOfMoney)
-      console.log(totalDailyMoney)
     })
-  }, [dailyTally])
+  }, [dailyTally, calculators])
 
   // if (dailyTally) {
   //   console.log(dailyTally)

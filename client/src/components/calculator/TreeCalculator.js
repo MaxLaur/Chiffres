@@ -9,11 +9,11 @@ const TreeCalculator = ({ id }) => {
   const [treePrice, setTreePrice] = useState(null)
   const [amountOfTrees, setAmountOfTrees] = useState(0)
   const [amountOfMoney, setAmountOfMoney] = useState(0)
-  // tree format daily tally
-  const [dailyTreeTally, setDailyTreeTally] = useState({numOfCassettes: 0, treeFormat: null, prep: null, amountOfTrees: null, amountOfMoney: null})
-  // total daily tally
+  // tree format/prep daily tally
+  const [dailyTreeTally, setDailyTreeTally] = useState({id: id, numOfCassettes: 0, treeFormat: null, prep: null, amountOfTrees: null, amountOfMoney: null})
+  // total daily tally(ies)
   const { dailyTally, setDailyTally } = useContext(CurrentUserContext)
-  const { totalDailyMoney, setTotalDailyMoney } = useContext(CurrentUserContext)
+  const { setTotalDailyMoney } = useContext(CurrentUserContext)
   const { calculators, setCalculators } = useContext(CurrentUserContext)
   // set the amount of cassettes planted
   const amountOfCassettes = (ev) => {
@@ -42,27 +42,46 @@ const TreeCalculator = ({ id }) => {
 
   // set the calculators' tally
   useEffect(() => {
-    setDailyTreeTally({numOfCassettes, treeFormat, prep, amountOfTrees, amountOfMoney})
+    setDailyTreeTally({...dailyTreeTally, numOfCassettes, treeFormat, prep, amountOfTrees, amountOfMoney})
   }, [treeFormat, numOfCassettes, prep, treePrice, amountOfMoney])
 
   // add tree tally to daily tally.
   const addTrees = () => {
+    //TODO
+    //make a check to see if that dailyTreeTally is already present in dailyTally first so that
+    //it modifies the already existing dailyTreeTally instead of adding it another time.
     setDailyTally([ ...dailyTally, dailyTreeTally])
+    console.log('when I add a dailyTreeTally ', dailyTally)
   }
   // find the index of the tally we want to remove to pass it to removeEntry
-  const findTheTreeTally = (element) => element === dailyTreeTally;
+  // const findTheTreeTally = (element) => element === dailyTreeTally.id;
+  // const findTheTreeTally = 
+  // const findTheCalculator = (element) => element.id === calculators.id;
+  const findTheCalculator = dailyTally.findIndex(obj => obj.id === id)
   // remove that entry from the daily tally
   const removeEntry = () => {
     setTotalDailyMoney(0)
-    // I don't know why but my code doesnt behave correctly unless I keep
-    // the console.log below. Maybe because it gives setTotalDailyMoney enough
-    // time to update itself? Tried async function and await setTotalDailyMoney
-    // as well as setDailyTally but still was getting a buggy result
-    console.log(dailyTally.splice(dailyTally.findIndex(findTheTreeTally), 1))
-    setDailyTally(dailyTally.splice(dailyTally.findIndex(findTheTreeTally), 1))
-    console.log(calculators)
-    console.log(calculators.findIndex(findTheTreeTally))
-    setCalculators(calculators.splice(calculators.findIndex(findTheTreeTally), 1))
+    console.log('dailyTreeTally before removing ', dailyTreeTally)
+    console.log('daily tally before removing ', dailyTally)
+    console.log('calculators before removing ', calculators)
+    if(dailyTally.length > 0) {
+      console.log('index I am looking to remove from dailyTally ', findTheCalculator)
+      // console.log('what I am setting dailyTally to when I hit delete ', dailyTally.splice(dailyTally.findIndex(findTheTreeTally), 1))
+      // setDailyTally(dailyTally.splice(dailyTally.findIndex(findTheTreeTally), 1))
+      console.log('findcal ',findTheCalculator)
+      setDailyTally(dailyTally.splice(findTheCalculator, 1))
+    }
+    console.log(calculators[findTheCalculator])
+    setCalculators(calculators.splice(findTheCalculator, 1))
+    console.log('calculators after removing ',calculators)
+    console.log('daily tally after removed ',dailyTally)
+
+    //trying chatgpt below
+    // console.log(id)
+    // const newDailyTally = dailyTally.filter(entry => entry.id !== id);
+    // setDailyTally(newDailyTally)
+    // const newCalculators = calculators.filter(calculator => calculator.id !== id);
+    // setCalculators(newCalculators)
   }
 
   if (dailyTreeTally) {
